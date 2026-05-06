@@ -344,6 +344,22 @@ BEHAVIOR RULES:
   });
 
   // ── User Queries API ─────────────────────────────────────────────
+  app.get("/api/user", (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    res.json(req.user);
+  });
+
+  app.post("/api/user/profile", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const userId = (req.user as any).id;
+    try {
+      const updatedUser = await storage.updateProfile(userId, req.body);
+      res.json(updatedUser);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.get("/api/queries", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     const queries = await storage.getQueriesByUser((req.user as any).id);

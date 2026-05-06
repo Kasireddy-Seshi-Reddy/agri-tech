@@ -39,6 +39,7 @@ export interface IStorage {
   getPredictions(userId: string): Promise<HistoryEntry[]>;
   addPrediction(userId: string, entry: HistoryEntry): Promise<void>;
   deletePrediction(userId: string, id?: number): Promise<void>;
+  updateProfile(id: string, profile: Partial<User>): Promise<User>;
   deleteUser(id: string): Promise<void>;
   updateUserBanStatus(id: string, isBanned: boolean): Promise<User>;
   getAllUsers(): Promise<User[]>;
@@ -168,6 +169,15 @@ export class MemStorage implements IStorage {
     const user = this.users.get(id);
     if (!user) throw new Error("User not found");
     const updatedUser = { ...user, password: newPasswordHash };
+    this.users.set(id, updatedUser);
+    await this.saveUsers();
+    return updatedUser;
+  }
+
+  async updateProfile(id: string, profile: Partial<User>): Promise<User> {
+    const user = this.users.get(id);
+    if (!user) throw new Error("User not found");
+    const updatedUser = { ...user, ...profile };
     this.users.set(id, updatedUser);
     await this.saveUsers();
     return updatedUser;
@@ -316,6 +326,12 @@ export class DatabaseStorage implements IStorage {
   async updateUserPassword(id: string, newPasswordHash: string): Promise<User> {
     if (!db) throw new Error("Database not configured");
     const [user] = await db.update(users).set({ password: newPasswordHash }).where(eq(users.id, id)).returning();
+    return user;
+  }
+
+  async updateProfile(id: string, profile: Partial<User>): Promise<User> {
+    if (!db) throw new Error("Database not configured");
+    const [user] = await db.update(users).set(profile).where(eq(users.id, id)).returning();
     return user;
   }
 

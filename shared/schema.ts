@@ -8,6 +8,10 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   isBanned: boolean("is_banned").default(false),
+  fullName: text("full_name"),
+  farmName: text("farm_name"),
+  location: text("location"),
+  phoneNumber: text("phone_number"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

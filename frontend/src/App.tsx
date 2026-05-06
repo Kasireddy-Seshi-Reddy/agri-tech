@@ -14,6 +14,7 @@ import History from "@/pages/history";
 import Chat from "@/pages/chat";
 import Admin from "@/pages/admin";
 import Support from "@/pages/support";
+import Profile from "@/pages/profile";
 
 // Layout
 import Layout from "@/components/layout";
@@ -61,6 +62,7 @@ function Router() {
       <ProtectedRoute path="/history" component={History} />
       <ProtectedRoute path="/chat" component={Chat} />
       <ProtectedRoute path="/support" component={Support} />
+      <ProtectedRoute path="/profile" component={Profile} />
       <ProtectedRoute path="/admin" component={Admin} />
 
       <Route component={NotFound} />

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Leaf, LayoutDashboard, History, MessageSquare, Sprout, LogOut, Menu, Shield, HelpCircle } from "lucide-react";
+import { Leaf, LayoutDashboard, History, MessageSquare, Sprout, LogOut, Menu, Shield, HelpCircle, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,7 @@ export default function Layout({ children }: LayoutProps) {
     { href: "/predict", label: "Predict Crop", icon: Sprout },
     { href: "/history", label: "History", icon: History },
     { href: "/chat", label: "AI Assistant", icon: MessageSquare },
+    { href: "/profile", label: "Profile", icon: UserCircle },
     { href: "/support", label: "Help & Support", icon: HelpCircle },
   ];
 
