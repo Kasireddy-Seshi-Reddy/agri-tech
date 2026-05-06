@@ -190,48 +190,56 @@ export default function Admin() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {users?.map((u: any) => (
-                        <TableRow key={u.id}>
-                          <TableCell className="font-mono text-xs">{u.id}</TableCell>
-                          <TableCell className="font-medium flex items-center gap-2">
-                            <User className="h-4 w-4 text-muted-foreground" />
-                            {u.username}
-                          </TableCell>
-                          <TableCell>
-                            {u.username === "capteam@gmail.com" ? (
-                              <Badge className="bg-primary/20 text-primary hover:bg-primary/30">Admin</Badge>
-                            ) : u.isBanned ? (
-                              <Badge variant="destructive">Banned</Badge>
-                            ) : (
-                              <Badge variant="secondary">User</Badge>
-                            )}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {u.username !== "capteam@gmail.com" && (
-                              <Button
-                                variant={u.isBanned ? "outline" : "destructive"}
-                                size="sm"
-                                onClick={() => {
-                                  if (confirm(`Are you sure you want to ${u.isBanned ? "unban" : "ban"} this user?`)) {
-                                    banUserMutation.mutate({ userId: u.id, isBanned: !u.isBanned });
-                                  }
-                                }}
-                                disabled={banUserMutation.isPending}
-                              >
-                                {u.isBanned ? (
-                                  <>
-                                    <CheckCircle2 className="h-4 w-4 mr-2" /> Unban
-                                  </>
-                                ) : (
-                                  <>
-                                    <Ban className="h-4 w-4 mr-2" /> Ban
-                                  </>
-                                )}
-                              </Button>
-                            )}
+                      {users?.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                            No other users have registered yet.
                           </TableCell>
                         </TableRow>
-                      ))}
+                      ) : (
+                        users?.map((u: any) => (
+                          <TableRow key={u.id}>
+                            <TableCell className="font-mono text-xs">{u.id}</TableCell>
+                            <TableCell className="font-medium flex items-center gap-2">
+                              <User className="h-4 w-4 text-muted-foreground" />
+                              {u.username}
+                            </TableCell>
+                            <TableCell>
+                              {u.username === "capteam@gmail.com" ? (
+                                <Badge className="bg-primary/20 text-primary hover:bg-primary/30">Admin</Badge>
+                              ) : u.isBanned ? (
+                                <Badge variant="destructive">Banned</Badge>
+                              ) : (
+                                <Badge variant="secondary">User</Badge>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {u.username !== "capteam@gmail.com" && (
+                                <Button
+                                  variant={u.isBanned ? "outline" : "destructive"}
+                                  size="sm"
+                                  onClick={() => {
+                                    if (confirm(`Are you sure you want to ${u.isBanned ? "unban" : "ban"} this user?`)) {
+                                      banUserMutation.mutate({ userId: u.id, isBanned: !u.isBanned });
+                                    }
+                                  }}
+                                  disabled={banUserMutation.isPending}
+                                >
+                                  {u.isBanned ? (
+                                    <>
+                                      <CheckCircle2 className="h-4 w-4 mr-2" /> Unban
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Ban className="h-4 w-4 mr-2" /> Ban
+                                    </>
+                                  )}
+                                </Button>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
                     </TableBody>
                   </Table>
                 </div>
