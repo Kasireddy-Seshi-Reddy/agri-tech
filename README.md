@@ -100,3 +100,5 @@ AgriTech is a comprehensive, state-of-the-art farming management platform design
 ```
 ---
 Built with ❤️ for modern agriculture.
+---
+LIVE DEPLOYED LINK - https://agri-tech-dashboard.onrender.com
