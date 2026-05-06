@@ -98,9 +98,5 @@ AgriTech is a comprehensive, state-of-the-art farming management platform design
 ├── ml-model/           # Python ML model & Serial Bridge
 └── attached_assets/    # Images and static assets
 ```
-
-## 📄 License
-This project is licensed under the MIT License.
-
 ---
 Built with ❤️ for modern agriculture.
