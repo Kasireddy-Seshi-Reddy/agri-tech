@@ -29,7 +29,7 @@ export default function Layout({ children }: LayoutProps) {
     <div className="flex h-full flex-col bg-sidebar border-r">
       <div className="p-6 flex items-center gap-2 text-sidebar-primary">
         <Leaf className="h-6 w-6" />
-        <span className="font-bold text-xl tracking-tight">AgriTech AI</span>
+        <span className="font-bold text-xl tracking-tight">AgriTech</span>
       </div>
       <nav className="flex-1 px-4 space-y-2">
         {navItems.map((item) => (

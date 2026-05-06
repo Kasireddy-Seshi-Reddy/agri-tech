@@ -8,7 +8,7 @@ export default function Home() {
       <header className="container mx-auto px-4 h-20 flex items-center justify-between border-b border-transparent">
         <div className="flex items-center gap-2 text-primary">
           <Leaf className="h-6 w-6" />
-          <span className="font-bold text-xl tracking-tight">AgriTech AI</span>
+          <span className="font-bold text-xl tracking-tight">AgriTech</span>
         </div>
         <nav className="flex items-center gap-4">
           <Link href="/auth">
@@ -31,9 +31,9 @@ export default function Home() {
             OpenRouter Llama-3
           </div>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-foreground max-w-4xl mb-6 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100">
-            Precision Farming,<br />
+            Cultivating the Future with<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">
-              Powered by AI.
+              Data-Driven Insights.
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200 leading-relaxed">
