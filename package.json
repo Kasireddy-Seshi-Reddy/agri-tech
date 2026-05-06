@@ -7,7 +7,7 @@
     "dev:frontend": "vite dev --port 5000",
     "dev": "tsx --env-file=.env backend/index.ts",
     "build": "vite build",
-    "start": "drizzle-kit push && tsx backend/index.ts",
+    "start": "npx drizzle-kit push && tsx backend/index.ts",
     "check": "tsc"
   },
   "dependencies": {
