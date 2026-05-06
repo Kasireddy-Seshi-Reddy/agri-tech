@@ -138,10 +138,10 @@ export async function registerRoutes(
 
       res.json(data);
     } catch (error: any) {
-      console.error("ML API error (predict):", error.message);
+      console.error("ML API error (predict):", error);
       res.status(503).json({
         success: false,
-        error: "ML model server is not available. Please ensure the Flask API is running on port 5001.",
+        error: `ML model server is not available. Detail: ${error.message}`,
         fallback: true,
       });
     }
