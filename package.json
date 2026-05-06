@@ -7,7 +7,7 @@
     "dev:frontend": "vite dev --port 5000",
     "dev": "tsx --env-file=.env backend/index.ts",
     "build": "vite build",
-    "start": "NODE_ENV=production tsx backend/index.ts",
+    "start": "tsx backend/index.ts",
     "check": "tsc"
   },
   "dependencies": {

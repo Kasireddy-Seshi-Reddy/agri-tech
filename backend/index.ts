@@ -62,8 +62,16 @@ app.use((req, res, next) => {
 import { setupAuth } from "./auth";
 
 (async () => {
-  setupAuth(app);
-  await registerRoutes(httpServer, app);
+  try {
+    log("Starting server initialization...");
+    setupAuth(app);
+    log("Auth setup complete.");
+    await registerRoutes(httpServer, app);
+    log("Routes registered.");
+  } catch (err) {
+    console.error("Critical error during server startup:", err);
+    process.exit(1);
+  }
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
