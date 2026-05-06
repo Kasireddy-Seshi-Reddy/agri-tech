@@ -135,7 +135,7 @@ export async function registerRoutes(
             timestamp: new Date().toISOString(),
             sensorData: { N: body.N, P: body.P, K: body.K, moisture: body.humidity, temperature: body.temperature, ph: body.ph, ec: 0 },
             prediction: { crop: data.prediction.crop, confidence: data.prediction.confidence },
-            soilHealthIndex: data.soil_health_index || 0,
+            soilHealthIndex: Math.round(data.soil_health_index || 0),
           });
           console.log("Prediction saved successfully.");
         } catch (dbErr: any) {
