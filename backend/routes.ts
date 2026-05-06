@@ -126,14 +126,19 @@ export async function registerRoutes(
       const data = await response.json();
 
       if (data.success && data.prediction?.crop) {
-        const body = req.body;
-        await storage.addPrediction(getUserId(req), {
-          id: Date.now(),
-          timestamp: new Date().toISOString(),
-          sensorData: { N: body.N, P: body.P, K: body.K, moisture: body.humidity, temperature: body.temperature, ph: body.ph, ec: 0 },
-          prediction: { crop: data.prediction.crop, confidence: data.prediction.confidence },
-          soilHealthIndex: data.soil_health_index || 0,
-        });
+        try {
+          const body = req.body;
+          await storage.addPrediction(getUserId(req), {
+            id: Date.now(),
+            timestamp: new Date().toISOString(),
+            sensorData: { N: body.N, P: body.P, K: body.K, moisture: body.humidity, temperature: body.temperature, ph: body.ph, ec: 0 },
+            prediction: { crop: data.prediction.crop, confidence: data.prediction.confidence },
+            soilHealthIndex: data.soil_health_index || 0,
+          });
+        } catch (dbErr: any) {
+          console.error("Failed to save prediction to history:", dbErr.message);
+          // We don't throw here so the user still gets their prediction
+        }
       }
 
       res.json(data);
