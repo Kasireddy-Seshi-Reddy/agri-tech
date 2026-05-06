@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 
-const ML_API_URL = process.env.ML_API_URL || "http://localhost:5001";
+const ML_API_URL = process.env.ML_MODEL_URL || process.env.ML_API_URL || "http://localhost:5001";
 
 // ── In-memory store for latest sensor data & ML prediction ─────────
 let latestSensorData: any = null;
