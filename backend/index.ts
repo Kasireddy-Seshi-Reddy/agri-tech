@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { pool } from "./db";
 
 const app = express();
 const httpServer = createServer(app);
@@ -64,6 +65,27 @@ import { setupAuth } from "./auth";
 (async () => {
   try {
     log("Starting server initialization...");
+    
+    // Fail-safe migration check
+    if (pool) {
+      log("Running fail-safe database migrations...");
+      const client = await pool.connect();
+      try {
+        await client.query(`
+          ALTER TABLE users 
+          ADD COLUMN IF NOT EXISTS full_name TEXT,
+          ADD COLUMN IF NOT EXISTS farm_name TEXT,
+          ADD COLUMN IF NOT EXISTS location TEXT,
+          ADD COLUMN IF NOT EXISTS phone_number TEXT;
+        `);
+        log("Fail-safe migrations complete.");
+      } catch (migErr) {
+        log("Migration warning (might already exist): " + migErr);
+      } finally {
+        client.release();
+      }
+    }
+
     setupAuth(app);
     log("Auth setup complete.");
     await registerRoutes(httpServer, app);
