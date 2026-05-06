@@ -1,0 +1,319 @@
+=== MODEL OVERVIEW ===
+Parameter,Value
+Algorithm,Random Forest Classifier
+Number of Trees (n_estimators),100
+Max Depth,None (unlimited)
+Min Samples Split,2
+Min Samples Leaf,1
+Random State,42
+Total Dataset Size,721
+Training Samples (80%),576
+Testing Samples (20%),145
+Number of Crop Classes,24
+Crop Classes,"apple, banana, blackgram, chickpea, coconut, coffee, cotton, grapes, jute, kidneybeans, lentil, maize, mango, mothbeans, mungbean, muskmelon, orange, papaya, pigeonpeas, pomegranate, rice, sugarcane, watermelon, wheat"
+Overall Accuracy,100.00%
+Macro Avg Precision,100.00%
+Macro Avg Recall,100.00%
+Macro Avg F1-Score,100.00%
+
+=== FEATURE IMPORTANCES ===
+Rank,Feature,Importance Score,Importance %
+1,N,0.2324,23.24%
+2,humidity,0.2238,22.38%
+3,K,0.1894,18.94%
+4,P,0.1721,17.21%
+5,temperature,0.1057,10.57%
+6,ph,0.0766,7.66%
+
+=== PER-CLASS ACCURACY METRICS ===
+Crop,Precision,Recall,F1-Score,Test Samples,Result
+apple,1.0000,1.0000,1.0000,5,PASS
+banana,1.0000,1.0000,1.0000,5,PASS
+blackgram,1.0000,1.0000,1.0000,10,PASS
+chickpea,1.0000,1.0000,1.0000,14,PASS
+coconut,1.0000,1.0000,1.0000,4,PASS
+coffee,1.0000,1.0000,1.0000,4,PASS
+cotton,1.0000,1.0000,1.0000,6,PASS
+grapes,1.0000,1.0000,1.0000,3,PASS
+jute,1.0000,1.0000,1.0000,4,PASS
+kidneybeans,1.0000,1.0000,1.0000,5,PASS
+lentil,1.0000,1.0000,1.0000,7,PASS
+maize,1.0000,1.0000,1.0000,8,PASS
+mango,1.0000,1.0000,1.0000,10,PASS
+mothbeans,1.0000,1.0000,1.0000,5,PASS
+mungbean,1.0000,1.0000,1.0000,5,PASS
+muskmelon,1.0000,1.0000,1.0000,6,PASS
+orange,1.0000,1.0000,1.0000,3,PASS
+papaya,1.0000,1.0000,1.0000,7,PASS
+pigeonpeas,1.0000,1.0000,1.0000,5,PASS
+pomegranate,1.0000,1.0000,1.0000,4,PASS
+rice,1.0000,1.0000,1.0000,4,PASS
+sugarcane,1.0000,1.0000,1.0000,9,PASS
+watermelon,1.0000,1.0000,1.0000,7,PASS
+wheat,1.0000,1.0000,1.0000,5,PASS
+
+=== TEST SET RUN-THROUGH RESULTS ===
+Sample#,N,P,K,Temperature,Humidity,pH,Actual Crop,Predicted Crop,Confidence %,Match
+1,33,69,20,29.0,96.0,6.4,lentil,lentil,100.0,YES
+2,97,31,15,26.5,83.5,6.9,coffee,coffee,100.0,YES
+3,20,55,9,27.2,57.2,6.5,chickpea,chickpea,99.0,YES
+4,20,55,9,27.5,57.5,6.5,chickpea,chickpea,99.0,YES
+5,19,64,10,27.5,56.8,6.8,chickpea,chickpea,100.0,YES
+6,22,65,24,29.0,53.5,5.8,blackgram,blackgram,100.0,YES
+7,102,80,54,24.0,73.0,5.7,mango,mango,99.0,YES
+8,40,65,21,31.0,93.0,5.9,lentil,lentil,100.0,YES
+9,84,10,44,24.0,66.0,5.7,papaya,papaya,100.0,YES
+10,97,80,49,25.2,72.5,6.2,mango,mango,98.0,YES
+11,56,60,46,25.5,92.5,7.0,watermelon,watermelon,100.0,YES
+12,14,67,19,27.8,55.5,5.8,blackgram,blackgram,100.0,YES
+13,120,19,30,27.1,58.9,6.6,apple,apple,100.0,YES
+14,18,58,10,26.8,58.2,6.3,chickpea,chickpea,99.0,YES
+15,99,88,55,25.5,70.0,6.2,mango,mango,100.0,YES
+16,74,54,27,26.3,66.5,6.7,maize,maize,71.0,YES
+17,51,23,31,25.2,59.5,6.4,wheat,wheat,100.0,YES
+18,22,33,27,22.5,92.0,6.7,pigeonpeas,pigeonpeas,98.0,YES
+19,98,88,46,25.8,69.5,6.1,mango,mango,96.0,YES
+20,103,26,19,25.8,86.0,6.9,coffee,coffee,100.0,YES
+21,16,72,51,27.0,47.0,6.8,mungbean,mungbean,100.0,YES
+22,75,19,35,26.2,62.8,6.3,papaya,papaya,92.0,YES
+23,39,63,33,24.0,64.8,6.6,kidneybeans,kidneybeans,100.0,YES
+24,41,65,27,23.8,66.0,6.7,kidneybeans,kidneybeans,100.0,YES
+25,19,69,52,28.8,47.5,7.3,mungbean,mungbean,100.0,YES
+26,21,53,6,28.8,56.2,7.0,chickpea,chickpea,100.0,YES
+27,91,47,36,24.1,81.4,7.1,rice,rice,100.0,YES
+28,8,32,19,28.5,85.0,6.6,mothbeans,mothbeans,98.0,YES
+29,76,18,36,26.0,62.5,5.6,papaya,papaya,97.0,YES
+30,78,44,23,22.5,65.3,6.4,maize,maize,100.0,YES
+31,16,60,7,29.2,56.0,6.6,chickpea,chickpea,100.0,YES
+32,53,71,38,32.5,34.8,7.8,sugarcane,sugarcane,100.0,YES
+33,99,33,13,27.0,82.8,6.7,coffee,coffee,94.0,YES
+34,78,16,38,25.5,63.0,6.2,papaya,papaya,100.0,YES
+35,82,12,42,24.8,65.0,6.3,papaya,papaya,100.0,YES
+36,25,131,208,29.5,66.0,5.4,banana,banana,100.0,YES
+37,41,69,13,28.8,54.5,6.2,orange,orange,100.0,YES
+38,125,16,31,26.8,59.5,6.8,apple,apple,100.0,YES
+39,46,44,46,24.5,70.5,5.9,jute,jute,100.0,YES
+40,12,63,7,28.0,56.5,7.0,chickpea,chickpea,99.0,YES
+41,13,71,18,28.2,55.0,5.8,blackgram,blackgram,100.0,YES
+42,50,67,35,33.0,33.0,8.3,sugarcane,sugarcane,100.0,YES
+43,55,59,25,24.8,90.8,6.2,coconut,coconut,96.0,YES
+44,114,35,197,28.2,60.0,5.2,cotton,cotton,100.0,YES
+45,82,54,20,21.0,63.8,6.2,maize,maize,96.0,YES
+46,12,70,18,27.5,56.0,5.5,blackgram,blackgram,100.0,YES
+47,123,23,26,26.5,57.0,6.4,apple,apple,90.0,YES
+48,95,82,48,27.0,51.0,6.6,muskmelon,muskmelon,99.0,YES
+49,8,32,21,28.0,85.2,7.3,mothbeans,mothbeans,99.0,YES
+50,98,77,46,25.5,71.0,5.9,mango,mango,97.0,YES
+51,95,84,50,25.5,71.5,6.0,mango,mango,98.0,YES
+52,25,128,195,28.0,65.0,5.7,banana,banana,100.0,YES
+53,54,36,54,23.0,73.5,5.4,jute,jute,100.0,YES
+54,95,84,50,27.0,50.0,6.3,muskmelon,muskmelon,97.0,YES
+55,35,59,31,24.8,63.0,6.9,kidneybeans,kidneybeans,100.0,YES
+56,98,15,29,27.8,50.5,5.6,pomegranate,pomegranate,100.0,YES
+57,81,42,25,24.2,66.8,5.7,maize,maize,99.0,YES
+58,53,21,33,24.8,60.8,6.4,wheat,wheat,99.0,YES
+59,99,77,55,27.8,51.8,6.6,muskmelon,muskmelon,100.0,YES
+60,50,40,50,23.7,72.0,5.8,jute,jute,100.0,YES
+61,24,28,29,24.0,90.8,6.8,pigeonpeas,pigeonpeas,99.0,YES
+62,21,126,193,28.2,66.5,5.4,banana,banana,100.0,YES
+63,58,58,28,24.0,91.0,6.4,coconut,coconut,100.0,YES
+64,41,66,22,30.8,93.8,6.6,lentil,lentil,100.0,YES
+65,60,61,50,24.5,94.0,6.8,watermelon,watermelon,99.0,YES
+66,95,45,41,20.0,82.0,6.0,rice,rice,94.0,YES
+67,52,65,37,32.5,34.0,8.0,sugarcane,sugarcane,100.0,YES
+68,47,71,32,34.2,31.8,8.3,sugarcane,sugarcane,100.0,YES
+69,1,31,17,30.5,82.5,7.1,mothbeans,mothbeans,100.0,YES
+70,49,27,29,25.8,58.0,6.2,wheat,wheat,100.0,YES
+71,40,69,50,35.5,33.0,6.7,grapes,grapes,99.0,YES
+72,12,64,22,27.0,56.5,5.8,blackgram,blackgram,99.0,YES
+73,51,69,36,33.0,33.5,8.1,sugarcane,sugarcane,100.0,YES
+74,38,70,48,34.5,34.0,7.1,grapes,grapes,100.0,YES
+75,121,38,203,26.5,62.5,5.4,cotton,cotton,95.0,YES
+76,53,21,33,24.8,60.8,6.1,wheat,wheat,99.0,YES
+77,47,71,32,34.2,31.8,7.8,sugarcane,sugarcane,99.0,YES
+78,51,65,36,33.0,33.5,8.0,sugarcane,sugarcane,100.0,YES
+79,106,27,22,25.5,87.0,6.8,coffee,coffee,100.0,YES
+80,15,68,20,28.2,55.0,5.7,blackgram,blackgram,100.0,YES
+81,99,20,32,28.8,53.0,6.0,pomegranate,pomegranate,100.0,YES
+82,97,16,26,27.0,53.5,6.1,pomegranate,pomegranate,97.0,YES
+83,101,82,48,26.0,53.0,6.2,muskmelon,muskmelon,96.0,YES
+84,99,84,55,25.8,69.8,5.6,mango,mango,97.0,YES
+85,13,61,7,29.0,55.0,6.6,chickpea,chickpea,99.0,YES
+86,17,60,8,26.8,58.3,6.4,chickpea,chickpea,100.0,YES
+87,19,69,49,27.8,46.0,6.7,mungbean,mungbean,100.0,YES
+88,56,54,46,25.5,92.5,7.1,watermelon,watermelon,100.0,YES
+89,40,63,24,31.0,93.0,6.6,lentil,lentil,100.0,YES
+90,36,60,30,24.5,64.0,7.0,kidneybeans,kidneybeans,100.0,YES
+91,77,48,20,23.5,65.1,6.2,maize,maize,100.0,YES
+92,35,71,45,34.0,33.0,7.0,grapes,grapes,100.0,YES
+93,10,70,23,27.5,55.5,5.9,blackgram,blackgram,98.0,YES
+94,21,67,48,27.4,48.1,7.1,mungbean,mungbean,100.0,YES
+95,123,43,201,27.5,61.0,5.4,cotton,cotton,100.0,YES
+96,95,80,50,27.0,51.5,6.5,muskmelon,muskmelon,99.0,YES
+97,39,69,17,31.5,92.5,5.9,lentil,lentil,99.0,YES
+98,68,37,29,26.5,68.5,5.9,maize,maize,91.0,YES
+99,101,20,28,27.0,53.0,5.8,pomegranate,pomegranate,99.0,YES
+100,47,43,47,24.2,70.0,6.1,jute,jute,94.0,YES
+101,82,12,42,24.8,65.0,6.2,papaya,papaya,100.0,YES
+102,33,57,33,24.5,63.8,7.0,kidneybeans,kidneybeans,100.0,YES
+103,14,58,5,29.8,54.8,6.9,chickpea,chickpea,99.0,YES
+104,60,55,44,23.0,82.3,7.8,rice,rice,86.0,YES
+105,63,53,53,23.8,95.2,6.7,watermelon,watermelon,100.0,YES
+106,2,36,21,27.8,84.5,7.3,mothbeans,mothbeans,100.0,YES
+107,64,54,54,23.5,95.5,6.5,watermelon,watermelon,99.0,YES
+108,115,40,195,28.0,59.5,5.5,cotton,cotton,100.0,YES
+109,49,64,34,33.5,32.5,7.9,sugarcane,sugarcane,99.0,YES
+110,48,70,33,34.0,32.0,7.9,sugarcane,sugarcane,100.0,YES
+111,97,77,49,25.8,71.0,5.8,mango,mango,96.0,YES
+112,20,72,17,28.0,55.5,5.9,blackgram,blackgram,100.0,YES
+113,99,86,55,25.0,70.0,6.3,mango,mango,99.0,YES
+114,62,52,52,24.0,95.0,6.6,watermelon,watermelon,100.0,YES
+115,42,68,12,27.8,55.0,5.9,orange,orange,100.0,YES
+116,47,29,27,26.2,56.5,5.8,wheat,wheat,100.0,YES
+117,41,71,20,30.8,93.8,6.0,lentil,lentil,100.0,YES
+118,41,69,8,27.0,54.5,6.0,orange,orange,97.0,YES
+119,21,71,20,29.2,52.8,5.7,blackgram,blackgram,99.0,YES
+120,25,31,33,21.5,92.0,6.5,pigeonpeas,pigeonpeas,100.0,YES
+121,15,55,7,28.5,56.0,7.1,chickpea,chickpea,100.0,YES
+122,2,36,19,28.2,85.0,7.0,mothbeans,mothbeans,100.0,YES
+123,95,85,48,25.5,70.0,6.2,mango,mango,98.0,YES
+124,19,132,202,29.5,63.5,5.5,banana,banana,100.0,YES
+125,11,53,6,25.6,57.9,6.8,chickpea,chickpea,82.0,YES
+126,60,56,30,23.5,92.0,6.5,coconut,coconut,100.0,YES
+127,81,38,45,20.5,85.5,5.6,maize,maize,65.0,YES
+128,112,39,196,27.8,58.8,5.5,cotton,cotton,100.0,YES
+129,17,56,10,27.0,57.0,6.7,chickpea,chickpea,100.0,YES
+130,23,63,43,26.8,49.0,6.7,mungbean,mungbean,99.0,YES
+131,71,49,27,26.0,67.0,6.0,maize,maize,99.0,YES
+132,21,63,5,28.8,55.5,6.3,chickpea,chickpea,98.0,YES
+133,57,59,47,25.2,92.8,6.4,watermelon,watermelon,99.0,YES
+134,120,42,207,26.8,62.0,5.3,cotton,cotton,100.0,YES
+135,61,57,31,23.0,93.0,6.4,coconut,coconut,99.0,YES
+136,21,30,28,23.5,91.0,6.6,pigeonpeas,pigeonpeas,100.0,YES
+137,125,17,32,26.8,60.0,6.4,apple,apple,99.0,YES
+138,16,65,21,28.5,54.8,5.4,blackgram,blackgram,100.0,YES
+139,21,126,198,27.0,66.0,5.8,banana,banana,100.0,YES
+140,77,17,37,25.8,62.0,6.1,papaya,papaya,98.0,YES
+141,97,81,49,26.2,51.5,6.3,muskmelon,muskmelon,99.0,YES
+142,23,34,30,21.0,92.8,6.9,pigeonpeas,pigeonpeas,97.0,YES
+143,32,70,23,29.0,96.0,6.2,lentil,lentil,100.0,YES
+144,69,55,38,22.7,82.6,5.7,rice,rice,90.0,YES
+145,124,20,34,27.0,58.5,6.5,apple,apple,99.0,YES
+
+=== TEST SUMMARY ===
+Total Test Samples,145
+Correct Predictions,145
+Incorrect Predictions,0
+Accuracy,100.00%
+Model Status,PASSED
+
+=== TRAINING CODE (train_model.py) ===
+Line#,Code
+1,import pandas as pd
+2,import numpy as np
+3,from sklearn.model_selection import train_test_split
+4,from sklearn.ensemble import RandomForestClassifier
+5,from sklearn.preprocessing import LabelEncoder
+6,"from sklearn.metrics import classification_report, accuracy_score"
+7,import joblib
+8,
+9,# Step 1: Load the dataset
+10,df = pd.read_csv('dataset.csv')
+11,
+12,# Step 2: Define features (input) and labels (output)
+13,"feature_cols = ['N', 'P', 'K', 'temperature', 'humidity', 'ph']"
+14,X = df[feature_cols].values    # 6 soil parameters as input
+15,y = df['label'].values          # crop name as output
+16,
+17,# Step 3: Encode crop labels (text -> numbers)
+18,le = LabelEncoder()
+19,y_encoded = le.fit_transform(y)
+20,
+21,# Step 4: Split data into 80% training and 20% testing
+22,"X_train, X_test, y_train, y_test = train_test_split("
+23,"    X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded"
+24,)
+25,
+26,# Step 5: Create and train the Random Forest model
+27,model = RandomForestClassifier(
+28,"    n_estimators=100,       # 100 decision trees"
+29,"    max_depth=None,         # trees grow until pure"
+30,"    min_samples_split=2,    # min samples to split a node"
+31,"    min_samples_leaf=1,     # min samples in a leaf"
+32,"    random_state=42,        # reproducible results"
+33,"    n_jobs=-1,              # use all CPU cores"
+34,)
+35,"model.fit(X_train, y_train)    # Train the model"
+36,
+37,# Step 6: Test the model on unseen data
+38,y_pred = model.predict(X_test)
+39,"accuracy = accuracy_score(y_test, y_pred)"
+40,print(f'Model Accuracy: {accuracy * 100:.2f}%')
+41,
+42,# Step 7: Detailed per-class accuracy report
+43,"print(classification_report(y_test, y_pred, target_names=le.classes_))"
+44,
+45,# Step 8: Feature importance (which input matters most)
+46,"for feat, imp in zip(feature_cols, model.feature_importances_):"
+47,    print(f'  {feat}: {imp:.4f}')
+48,
+49,# Step 9: Save the trained model to disk
+50,"joblib.dump(model, 'crop_model.pkl')"
+51,"joblib.dump(le, 'label_encoder.pkl')"
+
+=== TESTING & PREDICTION CODE (app.py - Flask API) ===
+Line#,Code
+1,import joblib
+2,import numpy as np
+3,"from flask import Flask, request, jsonify"
+4,
+5,# Load the saved model and label encoder
+6,model = joblib.load('crop_model.pkl')
+7,label_encoder = joblib.load('label_encoder.pkl')
+8,
+9,app = Flask(__name__)
+10,
+11,"@app.route('/predict', methods=['POST'])"
+12,def predict():
+13,    data = request.json
+14,
+15,    # Extract 6 soil parameters from request
+16,    features = np.array([[
+17,"        data['N'],            # Nitrogen (mg/kg)"
+18,"        data['P'],            # Phosphorus (mg/kg)"
+19,"        data['K'],            # Potassium (mg/kg)"
+20,"        data['temperature'],  # Temperature (Celsius)"
+21,"        data['humidity'],     # Humidity / Moisture (%)"
+22,"        data['ph'],           # pH level"
+23,    ]])
+24,
+25,    # Get prediction probabilities for all 24 crops
+26,    probabilities = model.predict_proba(features)[0]
+27,
+28,    # Get the top 3 most likely crops
+29,    top_3_idx = np.argsort(probabilities)[::-1][:3]
+30,    top_3_crops = [
+31,        {
+32,"            'crop': label_encoder.classes_[idx],"
+33,"            'confidence': round(probabilities[idx] * 100, 1)"
+34,        }
+35,        for idx in top_3_idx
+36,    ]
+37,
+38,    # Best prediction
+39,    best_idx = top_3_idx[0]
+40,    predicted_crop = label_encoder.classes_[best_idx]
+41,"    confidence = round(probabilities[best_idx] * 100, 1)"
+42,
+43,    return jsonify({
+44,"        'success': True,"
+45,"        'prediction': {'crop': predicted_crop, 'confidence': confidence},"
+46,        'top_3_crops': top_3_crops
+47,    })
+48,
+49,# How accuracy was tested:
+50,# 1. Dataset split into 80% training (576 samples) & 20% testing (145 samples)
+51,# 2. Model trained on training set only
+52,# 3. Model predicted crops for all 145 test samples
+53,# 4. Predicted vs actual compared -> 145/145 correct = 100% accuracy
+54,"# 5. sklearn.metrics.accuracy_score(y_test, y_pred) = 1.0000"

@@ -1,0 +1,355 @@
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+
+const ML_API_URL = process.env.ML_API_URL || "http://localhost:5001";
+
+// ── In-memory store for latest sensor data & ML prediction ─────────
+let latestSensorData: any = null;
+let latestPrediction: any = null;
+let lastUpdated: string | null = null;
+
+export async function registerRoutes(
+  httpServer: Server,
+  app: Express
+): Promise<Server> {
+
+  const getUserId = (req: any) => req.user?.id || "guest";
+
+  // ── Receive sensor data from serial bridge ───────────────────────
+  app.post("/api/soil-data", async (req, res) => {
+    try {
+      const data = req.body;
+      latestSensorData = {
+        nitrogen: data.N ?? data.nitrogen ?? 0,
+        phosphorus: data.P ?? data.phosphorus ?? 0,
+        potassium: data.K ?? data.potassium ?? 0,
+        moisture: data.moisture ?? data.humidity ?? 0,
+        temperature: data.temperature ?? 0,
+        ph: data.ph ?? 6.5,
+        ec: data.ec ?? 0,
+        soilOk: data.soilOk ?? true,
+        npkOk: data.npkOk ?? true,
+      };
+      lastUpdated = new Date().toISOString();
+
+      try {
+        const mlResponse = await fetch(`${ML_API_URL}/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            N: latestSensorData.nitrogen,
+            P: latestSensorData.phosphorus,
+            K: latestSensorData.potassium,
+            temperature: latestSensorData.temperature,
+            humidity: latestSensorData.moisture,
+            ph: latestSensorData.ph,
+          }),
+        });
+
+        if (mlResponse.ok) {
+          latestPrediction = await mlResponse.json();
+        }
+      } catch (mlErr: any) {
+        console.error("ML auto-predict failed:", mlErr.message);
+      }
+
+      res.json({
+        success: true,
+        stored: true,
+        prediction: latestPrediction?.prediction ?? null,
+        timestamp: lastUpdated,
+      });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  // ── Get latest sensor data + ML prediction ──────────────────────
+  app.get("/api/soil-data", (_req, res) => {
+    if (!latestSensorData) {
+      res.json({
+        success: true,
+        hasData: false,
+        message: "No sensor data received yet. Start the serial bridge.",
+      });
+      return;
+    }
+
+    const isStale = lastUpdated
+      ? (Date.now() - new Date(lastUpdated).getTime()) > 15000
+      : true;
+
+    res.json({
+      success: true,
+      hasData: !isStale,
+      sensorData: latestSensorData,
+      prediction: latestPrediction,
+      lastUpdated,
+    });
+  });
+
+  // ── Prediction History ──────────────────────────────────────────
+  app.get("/api/history", async (req, res) => {
+    const history = await storage.getPredictions(getUserId(req));
+    res.json({
+      success: true,
+      history,
+      total: history.length,
+    });
+  });
+
+  app.delete("/api/history/:id", async (req, res) => {
+    const id = parseInt(req.params.id);
+    await storage.deletePrediction(getUserId(req), id);
+    res.json({ success: true });
+  });
+
+  app.delete("/api/history", async (req, res) => {
+    await storage.deletePrediction(getUserId(req));
+    res.json({ success: true });
+  });
+
+  // ── Manual Crop Prediction (proxy to Flask ML API) ───────────────
+  app.post("/api/predict", async (req, res) => {
+    try {
+      const response = await fetch(`${ML_API_URL}/predict`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(req.body),
+      });
+
+      if (!response.ok) {
+        throw new Error(`ML API responded with status ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.prediction?.crop) {
+        const body = req.body;
+        await storage.addPrediction(getUserId(req), {
+          id: Date.now(),
+          timestamp: new Date().toISOString(),
+          sensorData: { N: body.N, P: body.P, K: body.K, moisture: body.humidity, temperature: body.temperature, ph: body.ph, ec: 0 },
+          prediction: { crop: data.prediction.crop, confidence: data.prediction.confidence },
+          soilHealthIndex: data.soil_health_index || 0,
+        });
+      }
+
+      res.json(data);
+    } catch (error: any) {
+      console.error("ML API error (predict):", error.message);
+      res.status(503).json({
+        success: false,
+        error: "ML model server is not available. Please ensure the Flask API is running on port 5001.",
+        fallback: true,
+      });
+    }
+  });
+
+  // ── Fertilizer Recommendation (proxy to Flask ML API) ────────────
+  app.post("/api/fertilizer", async (req, res) => {
+    try {
+      const response = await fetch(`${ML_API_URL}/fertilizer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(req.body),
+      });
+
+      if (!response.ok) {
+        throw new Error(`ML API responded with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      res.json(data);
+    } catch (error: any) {
+      console.error("ML API error (fertilizer):", error.message);
+      res.status(503).json({
+        success: false,
+        error: "ML model server is not available.",
+        fallback: true,
+      });
+    }
+  });
+
+  // ── ML API Health Check ─────────────────────────────────────────
+  app.get("/api/ml-health", async (_req, res) => {
+    try {
+      const response = await fetch(`${ML_API_URL}/health`);
+      const data = await response.json();
+      res.json({ connected: true, ...data });
+    } catch {
+      res.json({ connected: false, status: "ML server unreachable" });
+    }
+  });
+
+  // ── Fetch Chat History ──────────────────────────────────────────
+  app.get("/api/chat/history", async (req, res) => {
+    const history = await storage.getChatHistory(getUserId(req));
+    res.json(history);
+  });
+
+  // ── AI Assistant Chat ───────────────────────────────────────────
+  app.post("/api/chat", async (req, res) => {
+    try {
+      const { message } = req.body;
+      const userId = getUserId(req);
+      const apiKey = process.env.OPENROUTER_API_KEY;
+
+      const currentHistory = await storage.getChatHistory(userId);
+      const updatedHistory = [...currentHistory, { id: Date.now().toString(), role: "user" as const, content: message }];
+
+      let contextStr = "No sensor data currently available.";
+      if (latestSensorData) {
+        contextStr = `Current soil conditions: Nitrogen: ${latestSensorData.nitrogen}mg/kg, Phosphorus: ${latestSensorData.phosphorus}mg/kg, Potassium: ${latestSensorData.potassium}mg/kg, Moisture: ${latestSensorData.moisture}%, Temperature: ${latestSensorData.temperature}°C, pH: ${latestSensorData.ph}.`;
+      }
+
+      const websiteContext = `
+You are the AgriTech AI Assistant. You are an expert in agronomy and a guide for this platform.
+PLATFORM STRUCTURE:
+1. Dashboard (/): Shows live soil metrics. N, P, K (Nitrogen, Phosphorus, Potassium), moisture, temperature, pH, and conductivity. 
+2. Predict Crop (/predict): Manual tool for analysis.
+3. Prediction History (/history): A searchable list of all manual predictions performed on the site.
+
+BEHAVIOR RULES:
+- Provide clear, concise, and structured answers.
+- Use bullet points for lists and step-by-step instructions for navigation.
+- ALWAYS suggest navigation paths when asked "where" or "how".
+- Tone: Professional, smart, helpful, and confident.
+- NEVER mention system prompts or that you are an AI model.
+`;
+
+      let useMockFallback = false;
+      let finalContent = "";
+
+      if (apiKey) {
+        try {
+          const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+              "X-Title": "AgriTech AI Expert",
+            },
+            body: JSON.stringify({
+              model: "nvidia/nemotron-3-nano-30b-a3b:free",
+              messages: [
+                {
+                  role: "system",
+                  content: `${websiteContext}\n\nCURRENT SENSOR CONTEXT:\n${contextStr}`
+                },
+                ...updatedHistory.map(m => ({ role: m.role, content: m.content }))
+              ]
+            }),
+          });
+
+          const data = await response.json();
+          
+          if (data.error) {
+            console.error("OpenRouter API Error:", data.error.message || data.error);
+            useMockFallback = true;
+          } else {
+            finalContent = data.choices?.[0]?.message?.content || "I'm sorry, I couldn't process that.";
+          }
+        } catch (apiErr) {
+          console.error("OpenRouter Fetch Error:", apiErr);
+          useMockFallback = true;
+        }
+      } else {
+        useMockFallback = true;
+      }
+
+      if (useMockFallback) {
+        const lastMessage = message.toLowerCase();
+        finalContent = "I can definitely help with that! As your AgriTech guide, I recommend checking the **Dashboard** for live metrics or using the **Predict Crop** tool for a full analysis. For deep conversational support, please provide an API key.";
+
+        if (lastMessage.includes("dashboard") || lastMessage.includes("where is metrics")) {
+          finalContent = "You can find your live soil data on the **Dashboard**. Navigate there by clicking 'Dashboard' in the sidebar.";
+        } else if (lastMessage.includes("predict") || lastMessage.includes("analysis")) {
+          finalContent = "To get a crop prediction, go to the **Predict Crop** page. Click 'Run ML Prediction' to see the Soil Health Index, Top 3 Recommended Crops, and fertilizer suggestions.";
+        } else if (lastMessage.includes("history")) {
+          finalContent = "All your previous manual predictions are stored in the **History** section, accessible from the sidebar menu.";
+        } else if (lastMessage.includes("hi") || lastMessage.includes("hello")) {
+          finalContent = "Hello! I'm your AgriTech guide. I can help you navigate the site, explain soil charts, or give farming advice. What's on your mind?";
+        }
+        await new Promise(r => setTimeout(r, 800));
+      }
+
+      const assistantMessage = { id: (Date.now() + 1).toString(), role: "assistant" as const, content: finalContent };
+      await storage.saveChatHistory(userId, [...updatedHistory, assistantMessage]);
+
+      res.json({ content: finalContent });
+    } catch (error: any) {
+      console.error("AI Assistant Error:", error.message);
+      res.status(500).json({ error: "Failed to communicate with AI Assistant." });
+    }
+  });
+
+  // ── Admin Portal API ─────────────────────────────────────────────
+  const isAdmin = (req: any, res: any, next: any) => {
+    if (req.isAuthenticated() && req.user?.username === "capteam@gmail.com") {
+      return next();
+    }
+    res.status(403).json({ error: "Forbidden: Admin access only" });
+  };
+
+  app.get("/api/admin/overview", isAdmin, async (req, res) => {
+    const stats = await storage.getOverviewStats();
+    res.json(stats);
+  });
+
+  app.get("/api/admin/users", isAdmin, async (req, res) => {
+    const users = await storage.getAllUsers();
+    const safeUsers = users.map(({ password, ...user }) => user);
+    res.json(safeUsers);
+  });
+
+  app.get("/api/admin/predictions", isAdmin, async (req, res) => {
+    const predictions = await storage.getAllPredictions();
+    res.json(predictions);
+  });
+
+  app.get("/api/admin/chats", isAdmin, async (req, res) => {
+    const chats = await storage.getAllChatHistory();
+    res.json(chats);
+  });
+
+  app.post("/api/admin/users/:id/ban", isAdmin, async (req, res) => {
+    const idToBan = req.params.id;
+    const { isBanned } = req.body;
+    if (idToBan === req.user?.id) {
+      return res.status(400).json({ error: "Cannot change the ban status of the admin account." });
+    }
+    await storage.updateUserBanStatus(idToBan, isBanned);
+    res.json({ success: true });
+  });
+
+  app.get("/api/admin/queries", isAdmin, async (req, res) => {
+    const queries = await storage.getAllQueries();
+    res.json(queries);
+  });
+
+  app.post("/api/admin/queries/:id/answer", isAdmin, async (req, res) => {
+    const { answer } = req.body;
+    if (!answer) return res.status(400).json({ error: "Answer is required." });
+    const query = await storage.answerQuery(Number(req.params.id), answer);
+    res.json(query);
+  });
+
+  // ── User Queries API ─────────────────────────────────────────────
+  app.get("/api/queries", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const queries = await storage.getQueriesByUser((req.user as any).id);
+    res.json(queries);
+  });
+
+  app.post("/api/queries", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    const { question } = req.body;
+    if (!question) return res.status(400).json({ error: "Question is required." });
+    const query = await storage.createQuery((req.user as any).id, question);
+    res.status(201).json(query);
+  });
+
+  return httpServer;
+}
