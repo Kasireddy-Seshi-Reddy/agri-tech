@@ -80,13 +80,13 @@
     "@vitejs/plugin-react": "^5.0.4",
     "tailwindcss": "^4.1.14",
     "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.6"
+    "postcss": "^8.5.6",
+    "@tailwindcss/vite": "^4.1.14"
   },
   "devDependencies": {
     "@replit/vite-plugin-cartographer": "^0.4.10",
     "@replit/vite-plugin-dev-banner": "^0.1.1",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.4",
-    "@tailwindcss/vite": "^4.1.14",
     "@types/connect-pg-simple": "^7.0.3",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.0",
